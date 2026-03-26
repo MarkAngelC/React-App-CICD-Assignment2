@@ -12,7 +12,7 @@ pipeline {
                 sh '''
                     node -v
                     npm -v
-                    npm ci
+                    npm install
                     npm run build
                 '''
             }
