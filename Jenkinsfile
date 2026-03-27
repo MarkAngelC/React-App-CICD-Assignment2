@@ -42,7 +42,7 @@ pipeline {
             }
             environment {
                 NETLIFY_AUTH_TOKEN = credentials('netlify-auth-token2')
-                NETLIFY_SITE_ID = credentials('netlify-site-id2')
+                NETLIFY_SITE_ID = credentials('db351678-bbd9-4fc4-9f8d-366038379d92')
             }
             steps {
                 sh '''
