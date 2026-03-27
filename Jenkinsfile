@@ -10,14 +10,15 @@ pipeline {
             }
             steps {
                 sh '''
+                    ls -la
                     node -v
                     npm -v
                     npm install
                     npm run build
+                    ls -la
                 '''
             }
         }
-
         stage('Test') {
             agent {
                 docker {
@@ -28,11 +29,10 @@ pipeline {
             steps {
                 sh '''
                     test -f build/index.html
-                    npm test -- --watchAll=false
+                    npm test
                 '''
             }
         }
-
         stage('Deploy') {
             agent {
                 docker {
@@ -42,13 +42,14 @@ pipeline {
             }
             environment {
                 NETLIFY_AUTH_TOKEN = credentials('netlify-auth-token2')
-                NETLIFY_SITE_ID = credentials('db351678-bbd9-4fc4-9f8d-366038379d92')
+                NETLIFY_SITE_ID = credentials('netlify-site-id2')
             }
             steps {
                 sh '''
                     npm install netlify-cli
                     node_modules/.bin/netlify --version
-                    node_modules/.bin/netlify deploy --auth=$NETLIFY_AUTH_TOKEN --site=$NETLIFY_SITE_ID --dir=build --prod --message="Jenkins build $BUILD_NUMBER"
+                    node_modules/.bin/netlify status
+                    node_modules/.bin/netlify deploy --dir=build --prod --message="Jenkins build $BUILD_NUMBER"
                 '''
             }
         }
